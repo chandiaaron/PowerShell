@@ -139,15 +139,123 @@ Another form is when the parameter starts and ends with itself enclosed in brack
 Single brackets are not required but optional `[-DependentServices]`
 
 
+# Module 
+
+In PowerShell, a module is a package that contains cmdlets, functions, scripts, variables, and other resources that can be used to perform specific tasks. Modules are a way to organise, distribute, and reuse powershell code. They make it easier to manage and extend powershells functionality. 
+
+- I will show a example of a module later on 
+
+#### Types of Modules: 
+
+
+- **Script Modules**:
+  - Defined in a `.psm1` file.
+  - Contains PowerShell scripts and functions.
+  - Example: A custom module for managing user accounts.
+
+- **Binary Modules**:
+  - Compiled code written in languages like C#.
+  - Typically distributed as `.dll` files.
+  - Example: Modules provided by Microsoft for managing Active Directory.
+
+- **Manifest Modules**:
+  - Defined by a `.psd1` manifest file.
+  - Can include scripts, binary modules, or other resources.
+  - Example: The PSReadLine module for improving the PowerShell console experience.
+
+- **Dynamic Modules**:
+  - Created at runtime using the `New-Module` cmdlet.
+  - Not persisted to disk and exists only in memory.
+
+
+# Alias 
+
+In powershell, an alias is a shorcut or alternate name for a cmdlet, function, script, or executable. Aliases allow you to use shorter or more familiar names for commands, making it faster and easier to work in the shell. 
+
+```powershell 
+New-Alias -Name svc -Value Get-Service
+```
+
+- **Common Built-in Aliases**:
+  - PowerShell comes with many built-in aliases for convenience. Here are some examples:
+    - `dir` → `Get-ChildItem`
+    - `cd` → `Set-Location`
+    - `ls` → `Get-ChildItem` (Unix-like systems)
+    - `cls` → `Clear-Host`
+    - `rm` → `Remove-Item`
+    - `echo` → `Write-Output`
+    - `ps` → `Get-Process`
+
+
+# Running unsupported CMD commands in PowerShell 
+
+![icacls pic](/images/power9.JPG)
+
+The icacls command is a CMD utility for managing file and folder permissions (Access Control Lists or ACLs). The examples in the image show how to grant permissions to the "Backup Operators" group.
+
+- **Command Breakdown**:
+  - `icacls c:\test /grant "backup operators":(f)(ci)(oi)`
+    - `c:\test`: The target directory.
+    - `/grant`: Grants permissions.
+    - `"backup operators"`: The user or group to which permissions are granted.
+    - `(f)`: Full control.
+    - `(ci)`: Container inherit (applies to subdirectories).
+    - `(oi)`: Object inherit (applies to files).
+
+- **Key Points**:
+  - `--%` is the stop-parsing symbol in PowerShell.
+    - It tells PowerShell to treat everything after it as literal text.
+    - Useful for running CMD commands, external executables, or scripts with special characters.
+
+![icacls pic](/images/power11.JPG)
+
+
+```powershell
+
+# I just created a file in my C drive and we providing permissions 
+
+New-Item -ItemType Directory -path C:\test
+icacls --% C:\test /grant "backup operators":(oi)(ci)(f)
+
+# Removing Exisiting Flags for a user 
+
+icacls C:\test /remove:John   
+
+```
+
+
+- The above code is an exmaple of Inheritance Flags, these only apply permissions to the folder, its files, and subfolders. 
+
+
+| **Flag** | **Full Name**            | **Description**                                                                 |
+|----------|--------------------------|---------------------------------------------------------------------------------|
+| **(OI)** | Object Inherit           | Applies the permission to files within the folder.                              |
+| **(CI)** | Container Inherit        | Applies the permission to subfolders within the folder.                         |
+| **(IO)** | Inherit Only             | Applies the permission only to child objects (files/subfolders), not the parent.|
+| **(NP)** | No Propagate Inherit     | Prevents the permission from being inherited by further nested objects.         |
+
+
+| **Permission**      | **Description**                                                                 |
+|----------------------|---------------------------------------------------------------------------------|
+| **Read (R)**         | Allows viewing or reading the file/folder.                                      |
+| **Write (W)**        | Allows modifying or deleting the file/folder.                                  |
+| **Execute (X)**      | Allows running the file (if it's an executable) or traversing the folder.      |
+| **Full Control (F)** | Grants all permissions, including modifying permissions and deleting the object.|
+| **Modify (M)**       | Combines Read, Write, Execute, and Delete permissions.                         |
+
+
+How They Work Together
+
+Inheritance flags determine where the permissions apply (e.g., files, subfolders).
+
+Permission types determine what actions are allowed (e.g., Read, Write, Execute)
 
 
 
 
-
-
-
-
-
+# OGV (Out-GridView)
+ 
+ 
 
 
 
